@@ -26,7 +26,7 @@ jobs:
             
             # Navigate to the project directory on EC2
             # Replace '/var/www/todo' with the actual path to your application on the server
-            cd /var/www/todo || { echo "Directory not found"; exit 1; }
+            cd /home/ubuntu/smart-todo || { echo "Directory not found"; exit 1; }
             
             # Fetch and checkout the latest code from the main branch
             git fetch origin
