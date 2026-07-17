@@ -1,0 +1,49 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || '22' }}
+          script: |
+            echo "Starting deployment to EC2..."
+            
+            # Navigate to the project directory on EC2
+            # Replace '/var/www/todo' with the actual path to your application on the server
+            cd /var/www/todo || { echo "Directory not found"; exit 1; }
+            
+            # Fetch and checkout the latest code from the main branch
+            git fetch origin
+            git checkout main
+            git pull origin main
+            
+            # Install Node.js dependencies
+            echo "Installing dependencies..."
+            npm install
+            
+            # Build the Vite application
+            echo "Building application..."
+            npm run build
+            
+            # Run the application / Restart service
+            # Since this is a Vite-based React frontend, Nginx is typically configured to serve the build directory (dist).
+            # If you are running the dev/preview server via Node/PM2, uncomment the command below:
+            # pm2 restart todo-app || pm2 start npm --name "todo-app" -- run preview
+            
+            echo "Deployment successfully completed!"
