@@ -126,7 +126,7 @@ function App() {
         <div className="todo-container glass-panel">
           {/* Header Title */}
           <div className="todo-header">
-            <h2>Your Workspace</h2>
+            <h2>Your List</h2>
             <p>Manage your daily challenges and tasks efficiently.</p>
           </div>
 
